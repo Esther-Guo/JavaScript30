@@ -21,7 +21,23 @@
   <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
 
   <style>
+    /* CSS variables */
+    :root {
+      --spacing: 10px;
+      --blur: 10px;
+      --base: yellow;
+    }
 
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+    
+    /* highlight 'JS'  */
+    .hl { 
+      color: var(--base);
+    }
     /*
       misc styles, nothing to do with CSS variables
     */
@@ -45,6 +61,31 @@
   </style>
 
   <script>
+    const inputs = document.querySelectorAll('.controls input'); // 返回 NodeList
+    const image = document.querySelector('img');
+    const highlight = document.querySelector('.hl');
+
+    function handleUpdate() {
+      // this.dataset 返回用户定义的data属性（sizing: 'px' in this case)
+      // this.value 对于 type='range' 的元素只返回数字，因此要加上定义在data-sizing属性中的'px'
+      const suffix = this.dataset.sizing || ''; // 颜色input没有定义data属性，所以suffix = undefined || ''也就是 ''
+      const newValue = this.value + suffix;
+      // console.log(newValue);
+      
+      // solution 1 (mine) 我操作的是元素的 CSS property
+      // if (this.id === 'spacing') image.style.padding = newValue;
+      // else if (this.id === 'blur') image.style.filter = `blur(${newValue})`;
+      // else {
+      //   image.style.background = newValue;
+      //   highlight.style.color = newValue;
+      // }
+
+      // solution 2 (Bos)
+      document.documentElement.style.setProperty(`--${this.id}`, newValue); // 直接改变CSS variables的值即可
+    }
+
+    inputs.forEach(input => input.addEventListener('change', handleUpdate)); // 监听input值改变事件（松开鼠标对象才变化）
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate)); // 监听鼠标滑动事件（即使正在滑动也会返回对象）
   </script>
 
 </body>
