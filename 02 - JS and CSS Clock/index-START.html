@@ -62,12 +62,40 @@
       background: black;
       position: absolute;
       top: 50%;
+      transform-origin: 100%; /* 改变旋转的原点 */
+      transform: rotate(90deg); /* 水平div旋转为垂直（12点） */
+      transition: all .1s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1); /* 指针回摆效果 */
     }
 
   </style>
 
   <script>
+    const secondHand = document.querySelector('.second-hand');
+    const minHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
 
+    function setDate() {
+      const now = new Date();
+      
+      const second = now.getSeconds();
+      const secondDegree = (second / 60) * 360 + 90; // +90 make the default position to 12
+
+      const minute = now.getMinutes();
+      const minuteDegree = (minute / 60) * 360 + (second / 60) * 6 + 90; // 每秒都在变 ~
+      // console.log(minuteDegree);
+
+      const hour = now.getHours();
+      const hourDegree = (hour / 12) * 360 + (minute / 60) * (360 / 12) + 90; // 每分钟都在变 ~
+      
+      secondHand.style.transform = `rotate(${secondDegree}deg)`;
+      minHand.style.transform = `rotate(${minuteDegree}deg)`;
+      hourHand.style.transform = `rotate(${hourDegree}deg)`;
+      // console.log(second);
+    }
+
+    setInterval(setDate, 1000); // 每隔1000毫秒执行一次setDate
+    // setDate(); // solution加了这句，但不加好像也没啥影响
 
   </script>
 </body>
