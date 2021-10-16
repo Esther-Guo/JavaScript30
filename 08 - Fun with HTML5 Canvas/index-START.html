@@ -6,7 +6,58 @@
 </head>
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
+
 <script>
+  const canvas = document.querySelector('#draw');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  ctx.strokeStyle = '#BADA55';
+  ctx.lineJoin = 'round'; // 线末端的类型。 允许的值： butt (默认), round, square.
+  ctx.lineCap = 'round'; //定义两线相交拐点的类型。允许的值：round, bevel, miter(默认)。
+  ctx.lineWidth = 100;
+
+  let isDrawing = false; 
+  let lastX = 0;
+  let lastY = 0;
+  let hue = 0;
+  let direction = true; // incremental/decremental line width
+
+  function draw(e) {
+    if (!isDrawing) return;
+    console.log(e);
+
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`
+
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke(); // no effect until we call this
+
+    [lastX, lastY] = [e.offsetX, e.offsetY]; // keep last position updated
+    hue++; // change the color by hue
+
+    if (hue>= 360) hue = 0; // to avoid hue getting too huge! But the code will work without this.
+
+    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+      direction = !direction; // flip it
+    }
+    if (direction === true) ctx.lineWidth++;
+    else ctx.lineWidth--;
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true; 
+    [lastX, lastY] = [e.offsetX, e.offsetY]; // start from currrent position
+  });
+
+  canvas.addEventListener('mousemove', draw);
+
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  // if mouseout with mousedown & mouseup while mouseout, then when !mouseout & mouseup, isDrawing = true(we don't want this!)
+  canvas.addEventListener('mouseout', () => isDrawing = false); 
 </script>
 
 <style>
