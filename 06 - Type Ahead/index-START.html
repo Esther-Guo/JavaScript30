@@ -15,7 +15,41 @@
     </ul>
   </form>
 <script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+  const cities = []; // store the data
+
+  fetch(endpoint)
+      .then(blob => blob.json()
+      .then(data => cities.push(...data)));
+
+  function findMatch(wordToMatch, cities) {
+    const regex = RegExp(wordToMatch, 'gi'); // g for global, i for insensitive
+    return cities.filter(place => {
+      return place.city.match(regex) || place.state.match(regex); // you must return it!!
+    });
+  }
+
+  function formatNumber(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); // just copy & paste XD
+  }
+
+  function displayMatch() {
+    const results = findMatch(this.value, cities);
+    const html = results.map(res => {
+      const regex = RegExp(this.value, 'gi'); // get the matching part(!cannot be replace by this.value cuz it's case-sensitive)
+      const city = res.city.replace(regex, `<span class='hl'>${this.value}</span>`);
+      const state = res.state.replace(regex, `<span class='hl'>${this.value}</span>`)
+      return `<li><span class="name">${city}, ${state}</span><span class="population">${formatNumber(res.population)}</span></li>`;
+    }).join(''); // each result returns a corresponding html clip. use join('') to concat them.
+    suggestions.innerHTML = html;
+  }
+
+  const search = document.querySelector('.search');
+  const suggestions = document.querySelector('.suggestions');
+
+  search.addEventListener('change', displayMatch);
+  search.addEventListener('keyup', displayMatch);
 
 </script>
 </body>
