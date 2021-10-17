@@ -30,7 +30,7 @@
       border-bottom: 0;
     }
 
-    input:checked + p {
+    input:checked + p { /* select any p DIRECTLY AFTER a clicked input */
       background: #F9F9F9;
       text-decoration: line-through;
     }
@@ -96,6 +96,59 @@
   </div>
 
 <script>
+  // MY SOLUTION!!!
+  const inputs = Array.from(document.querySelectorAll('input[type=checkbox]'));
+  let lastIndex, nextIndex; // 上个点击的index和当前点击的index
+  let shiftDown = false; // 用 keydown/keyup监听shift
+
+  function checkFinish() {
+    if (shiftDown) { // shift被按下
+      nextIndex = inputs.indexOf(this);
+      let [start, end] = lastIndex < nextIndex? [lastIndex, nextIndex]:[nextIndex, lastIndex]; // 确定遍历开始和结束
+      for (let i = start+1; i < end; i++) inputs[i].checked = true; // 遍历中间的元素设置为checked
+    }
+    lastIndex = inputs.indexOf(this); // 更新上个点击的index
+  }
+
+  inputs.forEach(input => input.addEventListener('change', checkFinish));
+  document.addEventListener('keydown', (e) => {
+    if (e.shiftKey) shiftDown = true;
+  })
+  document.addEventListener('keyup', (e) => {
+    if (!e.shiftKey) shiftDown = false;
+  })
+  
+  // -----------------------------------------------------------------------------------------------
+
+  // Bos's solution (Ctrl C&V)
+  // const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+
+  // let lastChecked; // 和我的lastIndex性质类似，但它记录的是对象
+
+  // function handleCheck(e) {
+  //   // Check if they had the shift key down
+  //   // AND check that they are checking it (not unchecking it)
+  //   let inBetween = false;
+  //   if (e.shiftKey && this.checked) { // 可以直接传event查看shift状态！
+  //     // go ahead and do what we please
+  //     // loop over every single checkbox
+  //     checkboxes.forEach(checkbox => { // 每次都要遍历所有的元素
+  //       console.log(checkbox);
+  //       if (checkbox === this || checkbox === lastChecked) { // 遍历到当前check的元素 or 上次点击的元素时
+  //         inBetween = !inBetween;   // 切换flag值，第一次切换true，第二次切换false
+  //         console.log('Starting to check them in between!');
+  //       }
+
+  //       if (inBetween) { // 标记中间的元素为checked
+  //         checkbox.checked = true; 
+  //       }
+  //     });
+  //   }
+
+  //   lastChecked = this;
+  // }
+
+  // checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck)); // 监听click可以避免一些兼容问题
 </script>
 </body>
 </html>
