@@ -7,6 +7,21 @@
 </head>
 <body>
 <script>
+  const keys = [];
+  const code = 'esther';
+
+  window.addEventListener('keyup', (e) => {
+    // console.log(e.key);
+    keys.push(e.key);
+    
+    // pressed.splice(-secretCode.length - 1, pressed.length - secretCode.length); // 较为费解
+    keys.splice(0, keys.length - code.length); // deleteCount <= 0, no element will be removed
+    console.log(keys);
+    if (keys.join('').includes(code)) {
+      console.log("DING DING");
+      cornify_add();
+    } 
+  });
 </script>
 </body>
 </html>
