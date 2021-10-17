@@ -18,28 +18,74 @@
     }
 
     // Regular
+    console.log('hello');
 
-    // Interpolated
+    // Interpolated 内插值替换
+    console.log('Hello I am a %s string!', '💩')
+    // In ES6, just use `` ~
 
-    // Styled
+    // Styled 在控制台输出带格式的文本
+    console.log('%c I am a pretty text.', 'color: #BADA55; text-shadow: 10px 10px 0 blue; font-size: 30px;');
 
     // warning!
+    console.warn('OH NO!!');
 
     // Error :|
+    console.error('SHIT');
 
-    // Info
+    // Info Chrome中好像没有特别效果
+    console.info('I have already spent 4 days in this.');
 
     // Testing
+    console.assert(1===1, 'wrong!'); // 'wrong' will not be triggered cuz 1===1
 
+    const p = document.querySelector('p');
+    console.assert(p.classList.contains('aha'), 'wrong!'); // 'wrong' will be triggered cuz p element doesn't have the 'aha' class
+ 
     // clearing
+    console.clear();
 
     // Viewing DOM Elements
+    console.log(p); //display the element
+    console.dir(p); //gives the properties and methods of the element
+    
+    console.clear();
 
     // Grouping together
+    dogs.forEach(dog => {
+      // console.group(`${dog.name}`); // group the dogs by dog.name
+      console.groupCollapsed(`${dog.name}`); // group the dogs and display them in a collapsed style
+      console.log(`This is ${dog.name}`);
+      console.log(`${dog.name} is ${dog.age} years old`);
+      console.log(`${dog.name} is ${dog.age * 7} dog years old`);
+      console.groupEnd(`${dog.name}`) // pass same variable as console.group()
+    })
 
     // counting
+    console.count('Wes');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Steve');
 
     // timing
+    console.time('fetching data');
+    fetch('https://api.github.com/users/Esther-Guo')
+      .then(data => data.json())
+      .then(data => {
+        console.timeEnd('fetching data'); // same parameter
+        console.log(data);
+      });
+
+    // table
+    console.table(dogs);
 
   </script>
 </body>
