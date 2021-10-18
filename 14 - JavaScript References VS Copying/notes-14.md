@@ -16,4 +16,4 @@ Copy an object:
 
 **Note**  
 The above methods are only one-level deep, for both arrays and objects. If you want a deep clone, use `cloneDeep` (not recommended).  
-Or, use `const newObj = JSON.parse(JSON.stringify(oldObj));`. It changes the object into a **string** and then parse it. 
+Or, use `const newObj = JSON.parse(JSON.stringify(oldObj));`. It changes the object into a **string** and then parse it back to an **object**. 

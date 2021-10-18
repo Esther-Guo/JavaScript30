@@ -28,7 +28,57 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || []; // if there's nothing called 'items' in local storage, fall back to []
+
+  function addItem(e) {
+    e.preventDefault(); // prevent the page from freshing when we submit the form
+    const input = this.querySelector('[name=item]'); // select the <input> element
+    const text = input.value;
+    const item = {
+      text,    // ES6 feature, short for `text: text`
+      done: false,
+    };
+    this.reset(); // reset the form element (clear the input field)
+    items.push(item);
+
+    populateList(items, itemsList);
+    localStorage.setItem('items', JSON.stringify(items)); // update local storage
+
+    // console.log(item);
+  }
+
+  function populateList(items = [], itemsList) { // set items to initial value [] to avoid error of undefined
+    itemsList.innerHTML = items.map((item, i) => {
+      return `
+        <li>
+          <input type="checkbox" id="item${i}" data-index=${i} ${item.done? 'checked':''}/>
+          <label for="item${i}">${item.text}</label>
+        </li>
+      `
+    }).join('');
+  }
+
+  function toggleDone(e) {
+    if (!e.target.matches('input')) return; // skip the target if it's not an input
+    const index = e.target.dataset.index; // where our data-index field does its job
+    items[index].done = !items[index].done;
+    localStorage.setItem('items', JSON.stringify(items)); // remember to update local storage
+    populateList(items, itemsList); // update the html content (otherwise the effect does not match the actual content)
+  }
+
+  addItems.addEventListener('submit', addItem);
+
+  populateList(items, itemsList);
+
+  // below won't work since the newly added items are not attached with event listeners
+  // const checkboxs = document.querySelectorAll('input');
+  // checkboxs.forEach(checkbox => checkbox.addEventListener('click', () => alert('i')));
+
+  // We need to listen to an element that exists all the time
+  // That is <ul> -- when its children (the <li>s) is clicked, tell which!
+  // Called Event Delegation
+  itemsList.addEventListener('click', toggleDone);
+  
 
 </script>
 
