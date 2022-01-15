@@ -182,6 +182,22 @@
     </li>
   </ul>
 <script>
+  // 注意取属性时要加 []
+  const timeNodes = Array.from(document.querySelectorAll('[data-time]')); // turn into array to use map() and reduce() later
+  const seconds = timeNodes
+                .map(time => time.dataset.time) // get data-xxx value
+                .map(timeStr => {
+                  const [min, sec] = timeStr.split(':').map(parseFloat); // map() to parse string to float
+                  return min * 60 + sec;
+                })
+                .reduce((total, each) => total+each); // reduce() to get sum
+  const hour = Math.floor(seconds / 3600);
+  let secondsLeft = seconds % 3600;
+
+  const minute = Math.floor(secondsLeft / 60);
+  secondsLeft = secondsLeft % 60;
+
+  console.log(hour, minute, secondsLeft);
 </script>
 </body>
 </html>
