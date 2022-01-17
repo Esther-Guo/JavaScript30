@@ -35,6 +35,37 @@
   </style>
 
 <script>
+  const hero = document.querySelector('.hero');
+  const text = hero.querySelector('h1');
+  const walk = 300; // 300px
+
+  function shadow(e) {
+    // const width = hero.offsetWidth;
+    // const height = hero.offsetHeight;
+
+    // or we can use the line below
+    const {offsetWidth: width, offsetHeight: height} = hero;
+
+    // offsetX&offstY tells you where the cursor is
+    let {offsetX: x, offsetY: y} = e; // use 'let' here since it may need to be modified later
+
+    if (this !== e.target) { // this will always be the div with class 'hero', but e.target might be the child element (<h1> in this case). Value of offsetX and offsetY are based on e.target
+      // so we need to make x&y consistently relative to <div>, even when e.target is <h1> 
+      x = x + e.target.offsetLeft;
+      y = y + e.target.offsetTop;
+    }
+
+    const xWalk = Math.round((x/width*walk) - walk/2); // range between walk/2 to -walk/2
+    const yWalk = Math.round((y/height*walk) - walk/2);
+
+    text.style.textShadow = `
+    ${xWalk}px ${yWalk}px 0 rgba(255,0,255,0.7),
+    ${xWalk*-1}px ${yWalk}px 0 rgba(0,255,255,0.7),
+    ${yWalk}px ${xWalk}px 0 rgba(255,255,0,0.7),
+    ${yWalk*-1}px ${xWalk}px 0 rgba(0,0,255,0.7)`;
+  }
+
+  hero.addEventListener('mousemove', shadow);
 </script>
 </body>
 </html>
