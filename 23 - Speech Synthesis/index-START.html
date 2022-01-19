@@ -35,6 +35,43 @@
   const options = document.querySelectorAll('[type="range"], [name="text"]');
   const speakButton = document.querySelector('#speak');
   const stopButton = document.querySelector('#stop');
+
+  // load voices into the dropdown menu
+  function populateVoices() {
+    voices = this.getVoices();
+    console.log(voices);
+    const voiceOptions = voices
+      .filter(voice => voice.lang.includes('zh')) // filter only chinese voices
+      .map(voice => `<option value=${voice.name}>${voice.name}(${voice.lang})</option>`)
+      .join('');
+    voicesDropdown.innerHTML = voiceOptions;
+  }
+
+  // switch voice
+  function changeVoice() {
+    msg.voice = voices.find(voice => voice.name === this.value);
+    toggle(); // stop the current speaking and restart with new voice
+  }
+
+  function toggle(startOver = true) {
+    speechSynthesis.cancel();
+    if (startOver) {
+      speechSynthesis.speak(msg);
+    }
+  }
+
+  function setOption() {
+    msg[this.name] = this.value;
+    toggle();
+  }
+
+  msg.text = document.querySelector('[name="text"]').value;
+  speechSynthesis.addEventListener('voiceschanged', populateVoices);
+  voicesDropdown.addEventListener('change', changeVoice);
+  options.forEach(option => option.addEventListener('change', setOption));
+  speakButton.addEventListener('click', toggle);
+  stopButton.addEventListener('click', () => toggle(false)); // or toggle.bind(null, false)
+
 </script>
 
 </body>
