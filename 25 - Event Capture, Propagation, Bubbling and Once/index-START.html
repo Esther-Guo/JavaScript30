@@ -43,6 +43,22 @@
 <button></button>
 <script>
 
+const divs = document.querySelectorAll('div');
+
+function logText(e) {
+  console.log(this.classList.value);
+
+  // e.stopPropagation();
+}
+
+// divs.forEach(div => div.addEventListener('click', logText)); // three two one
+
+// divs.forEach(div => div.addEventListener('click', logText, {capture: true})); // one two three
+
+// 触发一次后自动unbind (removeEventListener)
+divs.forEach(div => div.addEventListener('click', logText, {once: true})); // three two one 
+
+
 </script>
 </body>
 </html>
