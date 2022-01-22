@@ -6,6 +6,7 @@
 </head>
 <body>
   <h2>Cool</h2>
+  <h2>ddeede</h2>
   <nav class="top">
     <div class="dropdownBackground">
       <span class="arrow"></span>
@@ -146,7 +147,7 @@
     display: block;
   }
 
-  .trigger-enter-active .dropdown {
+  .trigger-enter-active .dropdown { /* for transition to work */
     opacity: 1;
   }
   
@@ -164,7 +165,7 @@
     opacity:0;
   }
 
-  .dropdownBackground.open {
+  .dropdownBackground.open { /* element has both class dropdownBackground & class open*/
     opacity: 1;
   }
 
@@ -220,6 +221,48 @@
 </style>
 
 <script>
+  const triggers = document.querySelectorAll('.cool > li');
+  const background = document.querySelector('.dropdownBackground');
+  const nav = document.querySelector('.top');
+
+  function handleEnter() {
+    this.classList.add('trigger-enter');
+    // contains()为了防止快速切换dropdown时trigger-enter-active还没被加上，trigger-enter就已经被去掉了
+    setTimeout(() => this.classList.contains('trigger-enter') && this.classList.add('trigger-enter-active'), 150); // 这里必须用arrow function才能保证this对象的继承
+
+    background.classList.add('open');
+
+    const dropdown = this.querySelector('.dropdown');
+    const dropdownCoords = dropdown.getBoundingClientRect();
+    const navCoords = nav.getBoundingClientRect();
+
+    const coords = {
+      height: dropdownCoords.height,
+      width: dropdownCoords.width,
+      top: dropdownCoords.top - navCoords.top,
+      left: dropdownCoords.left - navCoords.left
+    }
+
+    background.style.setProperty('height', `${coords.height}px`)
+    background.style.setProperty('width', `${coords.width}px`)
+    background.style.setProperty('top', `${coords.top}px`)
+    background.style.setProperty('left', `${coords.left}px`)
+
+    console.log(dropdownCoords);
+    console.log(navCoords);
+  }
+
+  function handleLeave() {
+    this.classList.remove('trigger-enter', 'trigger-enter-active');
+
+    background.classList.remove('open');
+
+  }
+
+  triggers.forEach(trigger => trigger.addEventListener('mouseenter', handleEnter));
+  triggers.forEach(trigger => trigger.addEventListener('mouseleave', handleLeave));
+
+
 </script>
 
 </body>
