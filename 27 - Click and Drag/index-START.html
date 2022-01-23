@@ -35,6 +35,41 @@
   </div>
 
 <script>
+  const slider = document.querySelector('.items');
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('active');
+
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+  })
+
+  slider.addEventListener('mouseup', () => {
+    isDown = false;
+    slider.classList.remove('active');
+
+  })
+
+  slider.addEventListener('mouseleave', () => {
+    isDown = false; // mousedown&&mouseleave -> mouseup -> 再进入时要保证isDown为false
+    slider.classList.remove('active');
+
+  })
+
+  slider.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault(); // 避免选中slider中的文字
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x- startX) * 3; // 移动鼠标移动距离的3倍，更丝滑
+
+    slider.scrollLeft = scrollLeft - walk; // scrollLeft记录每次松开鼠标后slide的偏移量
+
+  })
+
 </script>
 
   </body>
