@@ -15,6 +15,24 @@
   </div>
 
 <script>
+  const speed = document.querySelector('.speed');
+  const bar = document.querySelector('.speed-bar');
+  const video = document.querySelector('.flex');
+
+  speed.addEventListener('mousemove', function(e) { // use normal function to make 'this' equal to the speed bar 
+                          const y = e.pageY -  this.offsetTop;
+                          const percent = y / this.offsetHeight;
+                          const min = 0.4;
+                          const max = 4;
+                          const height = Math.round(percent * 100)+'%';
+                          bar.style.height = height;
+
+                          const rate = percent * (max - min) + min;
+                          bar.textContent = rate.toFixed(1) + 'x'; // 学会了 toFixed() 
+
+                          video.playbackRate = rate;
+                        });
+
 </script>
 </body>
 </html>
