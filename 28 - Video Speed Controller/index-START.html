@@ -28,7 +28,7 @@
                           bar.style.height = height;
 
                           const rate = percent * (max - min) + min;
-                          bar.textContent = rate.toFixed(1) + 'x'; // 学会了 toFixed() 
+                          bar.textContent = rate.toFixed(1) + 'x'; // 学会了 textContent(测试和innerHTML没区别) & toFixed() 
 
                           video.playbackRate = rate;
                         });
